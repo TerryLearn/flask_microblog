@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1> Sign In</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username(size=32) }}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(size=32) }}
+        </p>
+        <p> {{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p> {{ form.submit() }}</p>
+    </form>
+{% endblock %}
+
+{#
+<!--
+HTML<form>元素被用作Web表单的容器。 表单的action属性告诉浏览器在提交用户在表单中输入的信息时应该请求的URL。
+ 当action设置为空字符串时，表单将被提交给当前地址栏中的URL，即当前页面。
+  method属性指定了将表单提交给服务器时应该使用的HTTP请求方法。
+   默认情况下是用GET请求发送，但几乎在所有情况下，使用POST请求会提供更好的用户体验，
+   因为这种类型的请求可以在请求的主体中提交表单数据，
+    GET请求将表单字段添加到URL，会使浏览器地址栏变得混乱
+-->
+
+<!--
+form.hidden_tag()模板参数生成了一个隐藏字段，其中包含一个用于保护表单免受CSRF攻击的token。
+ 对于保护表单，你需要做的所有事情就是在模板中包括这个隐藏的字段，并在Flask配置中定义SECRET_KEY变量，Flask-WTF会完成剩下的工作
+-->
+
+<!--
+ 我只需在需要字段标签的地方加上{{ form.<field_name>.label }}，需要这个字段的地方加上{{ form.<field_name>() }}。
+ 对于需要附加HTML属性的字段，可以作为关键字参数传递到函数中。
+  此模板中的username和password字段将size作为参数，将其作为属性添加到<input> HTML元素中。
+  你也可以通过这种手段为表单字段设置class和id属性。
+ -->
+#}
