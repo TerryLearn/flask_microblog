@@ -1,4 +1,5 @@
-from flask import render_template
+
+from flask import render_template, flash, redirect
 
 from app import app
 from app.forms import LoginForm
@@ -38,9 +39,40 @@ def index():
 我从forms.py导入LoginForm类，并生成了一个实例传入模板。form=form的语法看起来奇怪，这是Python函数或方法传入关键字参数的方式
 ，左边的form代表在模板中引用的变量名称，右边则是传入的form实例。这就是获取表单字段渲染结果的所有代码了
 '''
-@app.route('/login')
+
+'''
+methods参数。 它告诉Flask这个视图函数接受GET和POST请求，并覆盖了默认的GET。 
+HTTP协议规定对GET请求需要返回信息给客户端（本例中是浏览器）。 本应用的所有GET请求都是如此。 
+当浏览器向服务器提交表单数据时，通常会使用POST请求（实际上用GET请求也可以，但这不是推荐的做法）。
+之前的“Method Not Allowed”错误正是由于视图函数还未配置允许POST请求。 通过传入methods参数，你就能告诉Flask哪些请求方法可以被接受
+'''
+
+'''
+form.validate_on_submit()实例方法会执行form校验的工作。
+当浏览器发起GET请求的时候，它返回False，这样视图函数就会跳过if块中的代码，直接转到视图函数的最后一句来渲染模板
+
+当用户在浏览器点击提交按钮后，浏览器会发送POST请求。
+form.validate_on_submit()就会获取到所有的数据，运行字段各自的验证器，全部通过之后就会返回True，这表示数据有效。
+不过，一旦有任意一个字段未通过验证，这个实例方法就会返回False，引发类似GET请求那样的表单的渲染并返回给用户。
+稍后我会在添加代码以实现在验证失败的时候显示一条错误消息。
+
+当form.validate_on_submit()返回True时，登录视图函数调用从Flask导入的两个新函数。 flash()函数是向用户显示消息的有效途径。
+ 许多应用使用这个技术来让用户知道某个动作是否成功。我将使用这种机制作为临时解决方案，因为我没有基础架构来真正地登录用户。
+  显示一条消息来确认应用已经收到登录认证凭据，我认为对当前来说已经足够了。
+
+登录视图函数中使用的第二个新函数是redirect()。这个函数指引浏览器自动重定向到它的参数所关联的URL。
+当前视图函数使用它将用户重定向到应用的主页
+
+当你调用flash()函数后，Flask会存储这个消息，但是却不会奇迹般地直接出现在页面上。
+模板需要将消息渲染到基础模板中，才能让所有派生出来的模板都能显示出来
+
+'''
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    if form.validate_on_submit():
+        flash('Login requested for user {}, remember_me=()'.format(form.username.data, form.remember_me.data))
+        return redirect('/index')
     return render_template('login.html', title='Sign In', form=form)
 
 #要完成应用程序，你需要在定义Flask应用程序实例的顶层（译者注：也就是microblog目录下）创建一个命名为microblog.py的Python脚本

@@ -12,9 +12,26 @@
         <a href="/index">Home</a>
         <a href="/login">Login</a>
     </div>
-
     <hr>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li> {{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
     {% block content %} {% endblock %}
 
 </body>
 </html>
+
+{#
+此处我用了with结构在当前模板的上下文中来将get_flashed_messages()的结果赋值给变量messages。
+get_flashed_messages()是Flask中的一个函数，它返回用flash()注册过的消息列表。
+接下来的条件结构用来检查变量messages是否包含元素，如果有，则在<ul>元素中，为每条消息用<li>元素来包裹渲染。
+    这种渲染的样式结果看起来不会美观，之后会有主题讲到Web应用的样式
+    闪现消息的一个有趣的属性是，一旦通过get_flashed_messages函数请求了一次，
+    它们就会从消息列表中移除，所以在调用flash()函数后它们只会出现一次。
+#}
