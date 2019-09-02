@@ -1,3 +1,5 @@
+from flask import render_template
+
 from app import app
 
 '''
@@ -12,7 +14,8 @@ from app import app
 @app.route('/index')
 
 def index():
-    return "Hello, World++Terry"
+    user = {'username': 'Terry'}
+    return render_template('index.html', title='home', user=user)
 
 
 #要完成应用程序，你需要在定义Flask应用程序实例的顶层（译者注：也就是microblog目录下）创建一个命名为microblog.py的Python脚本
