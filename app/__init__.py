@@ -1,8 +1,11 @@
 
 from flask import Flask
 
+from app.config import Config
 app = Flask(__name__)
 
+app.config.from_object(Config)
+print(app.config['SECRET_KEY'])
 '''
 上面的脚本仅仅是从flask中导入的类Flask，并以此类创建了一个应用程序对象
 传递给Flask类的__name__变量是一个Python预定义的变量，它表示当前调用它的模块的名字
