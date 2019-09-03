@@ -1,5 +1,5 @@
 
-from flask import render_template, flash, redirect
+from flask import render_template, flash, redirect, url_for
 
 from app import app
 from app.forms import LoginForm
@@ -72,7 +72,14 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         flash('Login requested for user {}, remember_me=()'.format(form.username.data, form.remember_me.data))
-        return redirect('/index')
+        return redirect(url_for('index'))
     return render_template('login.html', title='Sign In', form=form)
 
+
+'''
+为了更好地管理这些链接，Flask提供了一个名为url_for()的函数，它使用URL到视图函数的内部映射关系来生成URL。 
+例如，url_for('login')返回/login，url_for('index')返回/index。
+ url_for()的参数是endpoint名称，也就是视图函数的名字。
+
+'''
 #要完成应用程序，你需要在定义Flask应用程序实例的顶层（译者注：也就是microblog目录下）创建一个命名为microblog.py的Python脚本
