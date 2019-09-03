@@ -1,11 +1,15 @@
 
 from flask import Flask
-
 from app.config import Config
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
 app = Flask(__name__)
 
 app.config.from_object(Config)
 print(app.config['SECRET_KEY'])
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 '''
 上面的脚本仅仅是从flask中导入的类Flask，并以此类创建了一个应用程序对象
 传递给Flask类的__name__变量是一个Python预定义的变量，它表示当前调用它的模块的名字
@@ -16,7 +20,7 @@ print(app.config['SECRET_KEY'])
  你将会看到routes模块需要导入在这个脚本中定义的app变量，因此将routes的导入放在底部可以避免由于这两个文件之间的相互引用而导致的错误
 '''
 
-from app import  routes
+from app import  routes, models
 
 
 '''
