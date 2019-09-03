@@ -6,11 +6,17 @@
         {{ form.hidden_tag() }}
         <p>
             {{ form.username.label }}<br>
-            {{ form.username(size=32) }}
+            {{ form.username(size=32) }}<br>
+            {% for error in form.username.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
         </p>
         <p>
             {{ form.password.label }}<br>
-            {{ form.password(size=32) }}
+            {{ form.password(size=32) }}<br>
+            {% for error in form.password.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
         </p>
         <p> {{ form.remember_me() }} {{ form.remember_me.label }}</p>
         <p> {{ form.submit() }}</p>
@@ -38,4 +44,16 @@ form.hidden_tag()模板参数生成了一个隐藏字段，其中包含一个用
   此模板中的username和password字段将size作为参数，将其作为属性添加到<input> HTML元素中。
   你也可以通过这种手段为表单字段设置class和id属性。
  -->
+
+表单字段的验证器可防止无效数据被接收到应用中。 应用处理无效表单输入的方式是重新显示表单，以便用户进行更正。
+
+如果你尝试过提交无效的数据，相信你会注意到，虽然验证机制查无遗漏，却没有给出表单错误的具体线索。下一个任务是通过在验证失败的每个字段旁边添加有意义的错误消息来改善用户体验。
+
+实际上，表单验证器已经生成了这些描述性错误消息，所缺少的不过是模板中的一些额外的逻辑来渲染它们
+
+我做的唯一的改变是，在username和password字段之后添加for循环以便用红色字体来渲染验证器添加的错误信息。
+通常情况下，拥有验证器的字段都会用form.<field_name>.errors来渲染错误信息。 一个字段的验证错误信息结果是一个列表，
+    因为字段可以附加多个验证器，并且多个验证器都可能会提供错误消息以显示给用户。
+
+
 #}
