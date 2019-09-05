@@ -33,5 +33,56 @@ learn flask again
 * flask db downgrade命令可以回滚上次的迁移。 虽然在生产系统上不太可能需要此选项，但在开发过程中可能会发现它非常有用。 你可能已经生成了一个迁移脚本并将其应用，只是发现所做的更改并不完全是你所需要的。 在这种情况下，可以降级数据库，删除迁移脚本，然后生成一个新的来替换它
 
 
+##### 数据库使用
+
+* 对数据库的更改是在会话的上下文中完成的，你可以通过db.session进行访问验证。 允许在会话中累积多个更改，一旦所有更改都被注册，你可以发出一个指令db.session.commit()来以原子方式写入所有更改。 如果在会话执行的任何时候出现错误，调用db.session.rollback()会中止会话并删除存储在其中的所有更改。 要记住的重要一点是，只有在调用db.session.commit()时才会将更改写入数据库。 会话可以保证数据库永远不会处于不一致的状态
+
+* 所有模型都有一个query属性，它是运行数据库查询的入口。 最基本的查询就是返回该类的所有元素，它被适当地命名为all()。 请注意，添加这些用户时，它们的id字段依次自动设置为1和2。
+
+    另外一种查询方式是，如果你知道用户的id，可以用以下方式直接获取用户实例：
+    ```
+    >>> u = User.query.get(1)
+    >>> u
+    <User john>
+    
+    
+    >>> # print post author and body for all posts 
+    >>> posts = Post.query.all()
+    >>> for p in posts:
+    ...     print(p.id, p.author.username, p.body)
+    ...
+    1 john my first post!
+    
+    # get all users in reverse alphabetical order
+    >>> User.query.order_by(User.username.desc()).all()
+    [<User susan>, <User john>]
+    
+    >>> users = User.query.all()
+    >>> for u in users:
+    ...     db.session.delete(u)
+    ...
+    >>> posts = Post.query.all()
+    >>> for p in posts:
+    ...     db.session.delete(p)
+    ...
+    >>> db.session.commit()
+   ```
+   
+   ##### falsk shell
+  *  flask shell命令是flask命令集中的另一个非常有用的工具。 shell命令是Flask在继run之后的实现第二个“核心”命令。 这个命令的目的是在应用的上下文中启动一个Python解释器
+   * !(lask-sqlalchemy链接)[https://flask-sqlalchemy.palletsprojects.com/en/2.x/]
+   
+  * 使用常规的解释器会话时，除非明确地被导入，否则app对象是未知的，但是当使用flask shell时，该命令预先导入应用实例。 flask shell的绝妙之处不在于它预先导入了app，而是你可以配置一个“shell上下文”，也就是可以预先导入一份对象列表。
+   
+   在microblog.py中实现一个函数，它通过添加数据库实例和模型来创建了一个shell上下文环境：
+   ```
+   from app import app, db
+   from app.models import User, Post
+   
+   @app.shell_context_processor
+   def make_shell_context():
+   return {'db': db, 'User': User, 'Post': Post}
+   ```
+
 
 

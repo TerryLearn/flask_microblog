@@ -50,3 +50,4 @@ user_id字段被初始化为user.id的外键，这意味着它引用了来自用
 并将这个迁移应用到数据库：
 (venv) $ flask db upgrade
 '''
+
