@@ -8,6 +8,8 @@ from flask_login import current_user, login_user
 
 from app.models import User
 from flask_login import logout_user
+from app import  db
+from app.forms import RegistrationFrom
 
 '''
  函数上面的两个奇怪的＠app.route行是装饰器，这是Python语言的一个独特功能。 装饰器会修改跟在其后的函数。
@@ -118,3 +120,22 @@ def logout():
     return redirect(url_for('index'))
 
 #要完成应用程序，你需要在定义Flask应用程序实例的顶层（译者注：也就是microblog目录下）创建一个命名为microblog.py的Python脚本
+
+
+@app.route('/register', methods = ['GET', 'Post'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = RegistrationFrom()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations, you are now a registered user')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register',form=form)
+'''
+这个视图函数的逻辑也是一目了然，我首先确保调用这个路由的用户没有登录。表单的处理方式和登录的方式一样。在if validate_on_submit()条件块下，
+完成的逻辑如下：使用获取自表单的username、email和password创建一个新用户，将其写入数据库，然后重定向到登录页面以便用户登录。
+'''
