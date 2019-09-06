@@ -10,7 +10,11 @@
 <body>
     <div> Microblog:
         <a href="{{ url_for('index') }}">Home</a>
+        {% if current_user.is_anonymous %}
         <a href="{{ url_for('login') }}">Login</a>
+        {% else %}
+        <a href="{{ url_for('logout') }}">Login</a>
+        {% endif %}
     </div>
     <hr>
     {% with messages = get_flashed_messages() %}
@@ -34,4 +38,8 @@ get_flashed_messages()是Flask中的一个函数，它返回用flash()注册过�
     这种渲染的样式结果看起来不会美观，之后会有主题讲到Web应用的样式
     闪现消息的一个有趣的属性是，一旦通过get_flashed_messages函数请求了一次，
     它们就会从消息列表中移除，所以在调用flash()函数后它们只会出现一次。
+
+    用户实例的is_anonymous属性是在其模型继承UserMixin类后Flask-Login添加的，表达式current_user.is_anonymous仅当用户未登录时的值是True。
+
+
 #}

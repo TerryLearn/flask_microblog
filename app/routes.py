@@ -7,6 +7,7 @@ from app.forms import LoginForm
 from flask_login import current_user, login_user
 
 from app.models import User
+from flask_login import logout_user
 
 '''
  函数上面的两个奇怪的＠app.route行是装饰器，这是Python语言的一个独特功能。 装饰器会修改跟在其后的函数。
@@ -111,4 +112,9 @@ current_user变量来自Flask-Login，可以在处理过程中的任何时候调
 
 
 '''
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
 #要完成应用程序，你需要在定义Flask应用程序实例的顶层（译者注：也就是microblog目录下）创建一个命名为microblog.py的Python脚本
