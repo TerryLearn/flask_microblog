@@ -3,6 +3,7 @@ from flask import Flask
 from app.config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_login import LoginManager
 
 app = Flask(__name__)
 
@@ -10,6 +11,8 @@ app.config.from_object(Config)
 print(app.config['SECRET_KEY'])
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+login = LoginManager(app)
+
 '''
 上面的脚本仅仅是从flask中导入的类Flask，并以此类创建了一个应用程序对象
 传递给Flask类的__name__变量是一个Python预定义的变量，它表示当前调用它的模块的名字
@@ -27,3 +30,4 @@ from app import  routes, models
 那么在routes模块中有些什么？ 路由是应用程序实现的不同URL。 在Flask中，应用程序路由的处理逻辑被编写为Python函数，
 称为视图函数。 视图函数被映射到一个或多个路由URL，以便Flask知道当客户端请求给定的URL时执行什么逻辑
 '''
+

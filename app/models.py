@@ -1,8 +1,10 @@
 
 from app import db
 from  datetime import datetime
+from flask_login import UserMixin
+from app import login
 
-class User(db.Model):
+class User(UserMixin,db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64),index=True, unique=True)
     email = db.Column(db.String(120),index=True, unique=True)
@@ -50,4 +52,19 @@ user_id字段被初始化为user.id的外键，这意味着它引用了来自用
 并将这个迁移应用到数据库：
 (venv) $ flask db upgrade
 '''
+
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+'''
+使用Flask-Login的@login.user_loader装饰器来为用户加载功能注册函数。
+ Flask-Login将字符串类型的参数id传入用户加载函数，
+ 因此使用数字ID的数据库需要如上所示地将字符串转换为整数。
+
+
+'''
+
+
 
