@@ -10,7 +10,7 @@ from app.models import User
 from flask_login import logout_user
 from app import  db
 from app.forms import RegistrationFrom
-
+from datetime import datetime
 '''
  函数上面的两个奇怪的＠app.route行是装饰器，这是Python语言的一个独特功能。 装饰器会修改跟在其后的函数。
   装饰器的常见模式是使用它们将函数注册为某些事件的回调函数。 
@@ -24,6 +24,12 @@ from app.forms import RegistrationFrom
 该函数需要传入模板文件名和模板参数的变量列表，并返回模板中所有占位符都用实际变量值替换后的字符串结果。
 render_template()函数调用Flask框架原生依赖的Jinja2模板引擎。 Jinja2用render_template()函数传入的参数中的相应值替换{{...}}块
 '''
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.utcnow()
+        db.session.commit()
+
 @app.route('/')
 @app.route('/index')
 
