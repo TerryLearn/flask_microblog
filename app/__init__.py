@@ -12,6 +12,14 @@ print(app.config['SECRET_KEY'])
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
+login.login_view = 'login'
+
+'''
+上面的'login'值是登录视图函数（endpoint）名，换句话说该名称可用于url_for()函数的参数并返回对应的URL。
+
+Flask-Login使用名为@login_required的装饰器来拒绝匿名用户的访问以保护某个视图函数。
+ 当你将此装饰器添加到位于@app.route装饰器下面的视图函数上时，该函数将受到保护，不允许未经身份验证的用户访问。 以下是该装饰器如何应用于应用的主页视图函数的案例：
+'''
 
 '''
 上面的脚本仅仅是从flask中导入的类Flask，并以此类创建了一个应用程序对象

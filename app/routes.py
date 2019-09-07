@@ -4,7 +4,7 @@ from flask import render_template, flash, redirect, url_for
 from app import app
 from app.forms import LoginForm
 
-from flask_login import current_user, login_user
+from flask_login import current_user, login_user, login_required
 
 from app.models import User
 from flask_login import logout_user
@@ -27,6 +27,7 @@ render_template()函数调用Flask框架原生依赖的Jinja2模板引擎。 Jin
 @app.route('/')
 @app.route('/index')
 
+# @login_required
 def index():
     user = {'username': 'Terry--'}
     posts = [
@@ -42,6 +43,13 @@ def index():
     return render_template('index.html', title='home', user=user, posts=posts)
 
 
+'''
+ 当一个没有登录的用户访问被@login_required装饰器保护的视图函数时，装饰器将重定向到登录页面，
+ 不过，它将在这个重定向中包含一些额外的信息以便登录后的回转。
+  例如，如果用户导航到*/index*，那么@login_required装饰器将拦截请求并以重定向到*/login来响应
+  ，但是它会添加一个查询字符串参数来丰富这个URL，如/login?next=/index*。
+   原始URL设置了next查询字符串参数后，应用就可以在登录后使用它来重定向
+'''
 '''
 我从forms.py导入LoginForm类，并生成了一个实例传入模板。form=form的语法看起来奇怪，这是Python函数或方法传入关键字参数的方式
 ，左边的form代表在模板中引用的变量名称，右边则是传入的form实例。这就是获取表单字段渲染结果的所有代码了
