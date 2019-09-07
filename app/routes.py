@@ -29,7 +29,6 @@ render_template()函数调用Flask框架原生依赖的Jinja2模板引擎。 Jin
 
 # @login_required
 def index():
-    user = {'username': 'Terry--'}
     posts = [
         {
             'author': {'username': 'John'},
@@ -40,7 +39,7 @@ def index():
             'body': 'The Avengers movie was so cool!'
         }
     ]
-    return render_template('index.html', title='home', user=user, posts=posts)
+    return render_template('index.html', title='home', posts=posts)
 
 
 '''
