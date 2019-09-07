@@ -13,7 +13,8 @@
         {% if current_user.is_anonymous %}
         <a href="{{ url_for('login') }}">Login</a>
         {% else %}
-        <a href="{{ url_for('logout') }}">Login</a>
+        <a href="{{ url_for("user", username=current_user.username) }}">Profile</a>
+        <a href="{{ url_for('logout') }}">LoginOut</a>
         {% endif %}
     </div>
     <hr>
@@ -41,5 +42,6 @@ get_flashed_messages()是Flask中的一个函数，它返回用flash()注册过�
 
     用户实例的is_anonymous属性是在其模型继承UserMixin类后Flask-Login添加的，表达式current_user.is_anonymous仅当用户未登录时的值是True。
 
-
+这里唯一有趣的变化是用来生成链接到个人主页的url_for()调用。 由于个人主页视图函数接受一个动态参数，所以url_for()函数接收一个值作为关键字参数。
+ 由于这是一个指向当前登录个人主页的链接，我可以使用Flask-Login的current_user对象来生成正确的URL
 #}

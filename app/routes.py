@@ -146,3 +146,21 @@ def register():
 这个视图函数的逻辑也是一目了然，我首先确保调用这个路由的用户没有登录。表单的处理方式和登录的方式一样。在if validate_on_submit()条件块下，
 完成的逻辑如下：使用获取自表单的username、email和password创建一个新用户，将其写入数据库，然后重定向到登录页面以便用户登录。
 '''
+
+
+@app.route('/user/<username>')
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = [
+        {'author':user, 'body':'Test Post #1'},
+        {'author':user, 'body':'Test Post #2'}
+    ]
+    return render_template('user.html',user=user, posts=posts)
+
+'''
+ 本例中被<和>包裹的URL <username>是动态的。 当一个路由包含动态组件时，
+ Flask将接受该部分URL中的任何文本，并将以实际文本作为参数调用该视图函数
+ first_or_404()，当有结果时它的工作方式与first()完全相同，
+ 但是在没有结果的情况下会自动发送404 error给客户端
+'''
