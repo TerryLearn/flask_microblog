@@ -1,7 +1,7 @@
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField,BooleanField, SubmitField
-from wtforms.validators import DataRequired,ValidationError, Email, EqualTo
+from wtforms import StringField, PasswordField,BooleanField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired,ValidationError, Email, EqualTo, Length
 from app.models import User
 
 '''
@@ -45,4 +45,16 @@ class RegistrationFrom(FlaskForm):
  本处，我想确保用户输入的username和email不会与数据库中已存在的数据冲突，所以这两个方法执行数据库查询，并期望结果集为空。
   否则，则通过ValidationError触发验证错误
 
+'''
+
+class EditProfileForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    about_me = TextAreaField('About me', validators=[Length(min=0,max=140)])
+    submit = SubmitField('Submit')
+
+'''
+我在这个表单中使用了一个新的字段类型和一个新的验证器。
+ 对于“about_me”字段，我使用TextAreaField，这是一个多行输入文本框，用户可以在其中输入文本。 
+ 为了验证这个字段的长度，我使用了Length，它将确保输入的文本在0到140个字符之间，
+ 因为这是我为数据库中的相应字段分配的空间。
 '''
