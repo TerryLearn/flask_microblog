@@ -4,6 +4,8 @@ from app.config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+import logging
+from logging.handlers import SMTPHandler
 
 app = Flask(__name__)
 
@@ -30,6 +32,25 @@ Flask-Login使用名为@login_required的装饰器来拒绝匿名用户的访问
 其二，routes模块是在底部导入的，而不是在脚本的顶部。 最下面的导入是解决循环导入的问题，这是Flask应用程序的常见问题。
  你将会看到routes模块需要导入在这个脚本中定义的app变量，因此将routes的导入放在底部可以避免由于这两个文件之间的相互引用而导致的错误
 '''
+
+if not app.debug:
+    if app.config['MAIL_SERVER']:
+        auth = None
+    if app.config['MAIL_USERNAME'] or app.config['MAIL_PASSWORD']:
+        auth = (app.config['MAIL_USERNAME'], app.config['PASSWORD'])
+        secure = None
+        if app.config['MAIL_USE_TLS']:
+            secure = ()
+        mail_handler = SMTPHandler(
+            mailhost=(app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
+            fromaddr='no-reply@'+app.config['MAIL_SERVER'],
+            toaddrs = app.config['ADMINS'],subject='Microblog Failure',
+            credentials=auth, secure=secure
+        )
+        mail_handler.setLevel(logging.ERROR)
+        app.logger.addHandler(mail_handler)
+
+
 
 from app import  routes, models, errors
 

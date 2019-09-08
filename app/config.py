@@ -30,3 +30,18 @@ class Config():
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
     'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    MAIL_SERVER = os.environ.get('MAIL_SERVER')
+    MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)
+    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') is not None
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    ADMINS = ['ytdxxt10@163.com']
+
+
+'''
+电子邮件的配置变量包括服务器和端口，启用加密连接的布尔标记以及可选的用户名和密码。
+ 这五个配置变量来源于环境变量。 如果电子邮件服务器没有在环境中设置，
+ 那么我将禁用电子邮件功能。 电子邮件服务器端口也可以在环境变量中给出，但是如果没有设置，
+ 则使用标准端口25。 电子邮件服务器凭证默认不使用，但可以根据需要提供。
+  ADMINS配置变量是将收到错误报告的电子邮件地址列表，所以你自己的电子邮件地址应该在该列表中。'''
