@@ -5,7 +5,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 import logging
-from logging.handlers import SMTPHandler
+from logging.handlers import SMTPHandler,RotatingFileHandler
+import os
 
 app = Flask(__name__)
 
@@ -49,8 +50,16 @@ if not app.debug:
         )
         mail_handler.setLevel(logging.ERROR)
         app.logger.addHandler(mail_handler)
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
+    file_handler = RotatingFileHandler('logs/microblog.log', maxBytes=10400, backupCount=10)
 
-
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('Microblog startup')
 
 from app import  routes, models, errors
 
@@ -60,3 +69,13 @@ from app import  routes, models, errors
 称为视图函数。 视图函数被映射到一个或多个路由URL，以便Flask知道当客户端请求给定的URL时执行什么逻辑
 '''
 
+'''
+RotatingFileHandler类非常棒，因为它可以切割和清理日志文件，以确保日志文件在应用运行很长时间时不会变得太大。 
+本处，我将日志文件的大小限制为10KB，并只保留最后的十个日志文件作为备份。
+
+logging.Formatter类为日志消息提供自定义格式。 由于这些消息正在写入到一个文件，我希望它们可以存储尽可能多的信息。
+ 所以我使用的格式包括时间戳、日志记录级别、消息以及日志来源的源代码文件和行号。
+
+为了使日志记录更有用，我还将应用和文件日志记录器的日志记录级别降低到INFO级别。 
+如果你不熟悉日志记录类别，则按照严重程度递增的顺序来认识它们就行了，分别是DEBUG、INFO、WARNING、ERROR和CRITICAL
+'''
