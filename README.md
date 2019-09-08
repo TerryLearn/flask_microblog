@@ -1,6 +1,6 @@
 ### flask_microblog
 learn flask again
-
+![链接地址](https://juejin.im/entry/5af569076fb9a07aa34a5077)
 #### 数据库
  * 第一个是Flask-SQLAlchemy，这个插件为流行的SQLAlchemy包做了一层封装以便在Flask中调用更方便，
  类似SQLAlchemy这样的包叫做Object Relational Mapper，简称ORM。 ORM允许应用程序使用高级实体（如类，对象和方法）而不是表和SQL来管理数据库。 ORM的工作就是将高级操作转换成数据库命令。
