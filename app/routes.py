@@ -149,6 +149,8 @@ def register():
         flash('Congratulations, you are now a registered user')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register',form=form)
+
+
 '''
 这个视图函数的逻辑也是一目了然，我首先确保调用这个路由的用户没有登录。表单的处理方式和登录的方式一样。在if validate_on_submit()条件块下，
 完成的逻辑如下：使用获取自表单的username、email和password创建一个新用户，将其写入数据库，然后重定向到登录页面以便用户登录。

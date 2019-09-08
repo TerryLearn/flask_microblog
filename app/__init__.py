@@ -31,7 +31,7 @@ Flask-Login使用名为@login_required的装饰器来拒绝匿名用户的访问
  你将会看到routes模块需要导入在这个脚本中定义的app变量，因此将routes的导入放在底部可以避免由于这两个文件之间的相互引用而导致的错误
 '''
 
-from app import  routes, models
+from app import  routes, models, errors
 
 
 '''
