@@ -6,6 +6,29 @@ from app import login
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import md5
 
+
+
+'''
+这种关系将User实例关联到其他User实例，所以按照惯例，对于通过这种关系关联的一对用户来说，左侧用户关注右侧用户。 
+我在左侧的用户中定义了followed的关系，因为当我从左侧查询这个关系时，我将得到已关注的用户列表（即右侧的列表）。
+ 让我们逐个检查这个db.relationship()所有的参数：
+
+'User'是关系当中的右侧实体（将左侧实体看成是上级类）。由于这是自引用关系，所以我不得不在两侧都使用同一个实体。
+secondary 指定了用于该关系的关联表，就是使用我在上面定义的followers。
+primaryjoin 指明了通过关系表关联到左侧实体（关注者）的条件 。关系中的左侧的join条件是关系表中的follower_id字段与这个关注者的用户ID匹配。
+followers.c.follower_id表达式引用了该关系表中的follower_id列。
+secondaryjoin 指明了通过关系表关联到右侧实体（被关注者）的条件 。
+ 这个条件与primaryjoin类似，唯一的区别在于，现在我使用关系表的字段的是followed_id了。
+backref定义了右侧实体如何访问该关系。在左侧，关系被命名为followed，所以在右侧我将使用followers来表示所有左侧用户的列表，即粉丝列表。
+附加的lazy参数表示这个查询的执行模式，设置为动态模式的查询不会立即执行，直到被调用，这也是我设置用户动态一对多的关系的方式。
+lazy和backref中的lazy类似，只不过当前的这个是应用于左侧实体，backref中的是应用于右侧实体
+
+'''
+followers = db.Table('followers',
+                     db.Column('follower_id', db.Integer,db.ForeignKey('user.id')),
+                     db.Column('follower_id', db.Integer, db.ForeignKey('user.id'))
+                     )
+
 class User(UserMixin,db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64),index=True, unique=True)
@@ -14,6 +37,11 @@ class User(UserMixin,db.Model):
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    followed = db.relationship('User',
+                               secondary=followers,
+                               primaryjoin=(followers.c.follower_id == id),
+                               secondaryjoin=(followers.c.follower_id == id),
+                               backref= db.backref('followers', lazy='dynamic'), lazy='dynamic')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
