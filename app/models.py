@@ -53,10 +53,25 @@ class User(UserMixin,db.Model):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return 'http://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
 
+    def follow(self, user):
+        if not self.is_following(user):
+            self.followed.append(user)
+
+    def unfollow(self, user):
+        if self.is_following(user):
+            self.followed.remove(user)
+
+    def is_following(self, user):
+        return self.followed.filter(followers.c.follower_id == user.id).count() > 0
+
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
 
+'''
+我在is_following()中使用的过滤条件是，查找关联表中左侧外键设置为self用户且右侧设置为user参数的数据行。 
+查询以count()方法结束，返回结果的数量。 这个查询的结果是0或1，因此检查计数是1还是大于0实际上是相等的。
+'''
 '''
 上面创建的User类继承自db.Model，它是Flask-SQLAlchemy中所有模型的基类。
  这个类将表的字段定义为类属性，字段被创建为db.Column类的实例，
