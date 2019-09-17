@@ -42,8 +42,11 @@ def index():
         db.session.commit()
         flash('Your post is now live!')
         return redirect(url_for('index'))
-    posts = current_user.followed_posts().all()
-    return render_template('index.html', title='home', form=form, posts=posts)
+    page = request.args.get('page',1,type=int)
+    posts = current_user.followed_posts().paginate(
+        page,app.config['POSTS_PER_PAGE'], False
+    )
+    return render_template('index.html', title='home', form=form, posts=posts.items)
 
 
 '''
@@ -223,5 +226,15 @@ def unfollow(username):
 @app.route('/explore')
 @login_required
 def explore():
-    posts = Post.query.order_by(Post.timestamp.desc()).all()
-    return render_template('index.html',title='Explore', posts=posts)
+    page = request.args.get('page',1, type=int)
+    posts = Post.query.order_by(Post.timestamp.desc()).paginate(
+        page, app.config['POSTS_PER_PAGE'], False
+    )
+    return render_template('index.html',title='Explore', posts=posts.items)
+
+'''
+Flask-SQLAlchemy的paginate()方法原生就支持分页。例如，我想要获取用户关注的前20个动态，
+我可以将all()结束调用替换成如下的查询：
+
+>>> user.followed_posts().paginate(1, 20, False).items
+'''
