@@ -69,3 +69,8 @@ class EditProfileForm(FlaskForm):
  为了验证这个字段的长度，我使用了Length，它将确保输入的文本在0到140个字符之间，
  因为这是我为数据库中的相应字段分配的空间。
 '''
+
+
+class PostForm(FlaskForm):
+    post = TextAreaField('Say something', validators=[DataRequired(), Length(min=1, max=140)])
+    submit = SubmitField('Submit')
