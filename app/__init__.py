@@ -7,6 +7,7 @@ from flask_login import LoginManager
 import logging
 from logging.handlers import SMTPHandler,RotatingFileHandler
 import os
+from flask_mail import Mail
 
 app = Flask(__name__)
 
@@ -16,6 +17,8 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
+mail = Mail(app)
+
 
 '''
 上面的'login'值是登录视图函数（endpoint）名，换句话说该名称可用于url_for()函数的参数并返回对应的URL。
@@ -38,7 +41,7 @@ if not app.debug:
     if app.config['MAIL_SERVER']:
         auth = None
     if app.config['MAIL_USERNAME'] or app.config['MAIL_PASSWORD']:
-        auth = (app.config['MAIL_USERNAME'], app.config['PASSWORD'])
+        auth = (app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])
         secure = None
         if app.config['MAIL_USE_TLS']:
             secure = ()
