@@ -11,7 +11,9 @@ from flask_login import logout_user
 from app import  db
 from app.forms import RegistrationFrom
 from datetime import datetime
-from app.forms import EditProfileForm
+from app.forms import EditProfileForm, ResetPasswordRequestForm
+from app.email import send_password_reset_email
+
 '''
  函数上面的两个奇怪的＠app.route行是装饰器，这是Python语言的一个独特功能。 装饰器会修改跟在其后的函数。
   装饰器的常见模式是使用它们将函数注册为某些事件的回调函数。 
@@ -253,3 +255,16 @@ Flask-SQLAlchemy的paginate()方法原生就支持分页。例如，我想要获
 
 >>> user.followed_posts().paginate(1, 20, False).items
 '''
+
+@app.route('/reset_password_request',methods=['GET','POST'])
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            send_password_reset_email(user)
+            flash('Check your email for the instructions to reset your password')
+            return redirect(url_for('login'))
+    return render_template('reset_password_request.html', title='Reset Password',form=form)
