@@ -12,7 +12,7 @@ from app import  db
 from app.forms import RegistrationFrom
 from datetime import datetime
 from app.forms import EditProfileForm, ResetPasswordRequestForm, ResetPasswordForm
-from app.email import send_password_reset_email
+from app.email import send_password_reset_email, test_send
 
 '''
  函数上面的两个奇怪的＠app.route行是装饰器，这是Python语言的一个独特功能。 装饰器会修改跟在其后的函数。
@@ -265,6 +265,7 @@ def reset_password_request():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             send_password_reset_email(user)
+            # test_send()
             flash('Check your email for the instructions to reset your password')
             return redirect(url_for('login'))
     return render_template('reset_password_request.html', title='Reset Password',form=form)
@@ -283,4 +284,4 @@ def reset_password(token):
         db.session.commit()
         flash('Your password has been reset.')
         return redirect(url_for('login'))
-    return render_template('reset_password.html')
+    return render_template('reset_password.html',form=form)
