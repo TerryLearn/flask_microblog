@@ -2,7 +2,13 @@ import  os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-
+MAIL_SERVER = 'smtp.qq.com'
+MAIL_PORT = 465
+MAIL_USE_SSL = True
+MAIL_USE_TSL = False
+MAIL_USERNAME = '920536309@qq.com'
+MAIL_PASSWORD = 'whxcopihgaqabfff'
+#客户端发送邮件
 '''
 SECRET_KEY是我添加的唯一配置选项，对大多数Flask应用来说，它都是极其重要的。
 Flask及其一些扩展使用密钥的值作为加密密钥，用于生成签名或令牌。
@@ -31,13 +37,18 @@ class Config():
     'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     POSTS_PER_PAGE = 3
-
-    MAIL_SERVER = os.environ.get('MAIL_SERVER')
-    MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)
-    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') is not None
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    ADMINS = ['ytdxxt10@163.com']
+    MAIL_SERVER = 'smtp.qq.com'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USE_TLS = False
+    MAIL_USERNAME = '920536309@qq.com'
+    MAIL_PASSWORD = 'whxcopihgaqabfff'
+    # MAIL_SERVER = os.environ.get('MAIL_SERVER')
+    # MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)
+    # MAIL_USE_TSL = os.environ.get('MAIL_USE_TSL') is not None
+    # MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    # MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    ADMINS = ['920536309@qq.com']
 
 
 '''
