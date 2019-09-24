@@ -49,7 +49,7 @@ class Config():
     # MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     # MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = ['920536309@qq.com']
-    ELASTICSEARCH_URL = 'http://localhost:9200'
+    ELASTICSEARCH_URL = 'http://localhost:5000'
 
 
 '''
