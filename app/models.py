@@ -156,7 +156,7 @@ class User(PaginatedAPIMixin,UserMixin,db.Model):
         data = {
             'id':self.id,
             'username': self.username,
-            'last_seen': (self.last_seen.isoformat() + 'Z') if self.last_seen else None,
+            'last_seen': (self.last_seen.isoformat() + 'Z') if self.last_seen else "",
             'about_me': self.about_me,
             'post_counts': self.posts.count(),
             'follower_count': self.followers.count(),
